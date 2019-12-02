@@ -30,7 +30,8 @@ window.onload = function ()
 		var input = DF[D].input;
 		var func = DF[D].parts[P];
 		textarea_i.value = input;
-		textarea_c.value = func.toString();
+		var tabspace = '\xa0'.repeat(4);
+		textarea_c.value = func.toString().replace(/\t/g,tabspace);
 		textarea_o.value = func(input);
 	}
 }
@@ -49,7 +50,7 @@ function (Input)
 	var masses = Input.split("\n");
 	var fuel = 0;
 	for (var i=0; i<masses.length; ++i)
-		fuel += floor( parseInt(masses[i]) / 3 ) - 2;
+		fuel += floor(parseInt(masses[i]) / 3) - 2;
 	return fuel;
 },
 function (Input)

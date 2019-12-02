@@ -1,13 +1,12 @@
 html {
-	display: flex;
-	flex-flow: column;
-	justify-content: center;
-	align-items: center;
-	position: absolute;
+	display: block;
+	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
+	width: 100%;
+	height: 100%;
 }
 
 body {
@@ -18,7 +17,6 @@ body {
 	position: absolute;
 	box-sizing: border-box;
 	width: 100%;
-	max-width: 800px;
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -32,7 +30,7 @@ textarea, select {
 	border-radius: 4px;
 }
 
-textarea {
+* {
 	tab-size: 4 !important;
 }
 
@@ -42,7 +40,8 @@ textarea {
 	justify-content: center;
 	align-items: stretch;
 	box-sizing: border-box;
-	margin: 10px;
+	margin: 10px auto;
+	width: 100%;
 	max-width: 800px;
 }
 
@@ -69,6 +68,7 @@ textarea {
 
 #a19_in, #a19_out {
 	flex-grow: 1;
+	min-width: 0;
 	line-height: 10px;
 }
 
