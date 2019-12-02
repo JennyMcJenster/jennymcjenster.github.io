@@ -1,6 +1,8 @@
 // ui stuff
 window.onload = function ()
 {
+	var tabspace = '\xa0\xa0\xa0\xa0';
+
 	var textarea_i = document.getElementById("a19_in");
 	var textarea_o = document.getElementById("a19_out");
 	var textarea_c = document.getElementById("a19_code");
@@ -30,7 +32,6 @@ window.onload = function ()
 		var input = DF[D].input;
 		var func = DF[D].parts[P];
 		textarea_i.value = input;
-		var tabspace = '\xa0'.repeat(4);
 		textarea_c.value = func.toString().replace(/\t/g,tabspace);
 		textarea_o.value = func(input);
 	}
