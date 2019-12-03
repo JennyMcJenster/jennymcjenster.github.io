@@ -23,7 +23,7 @@ body {
 	background: #202020;
 }
 
-textarea, select {
+textarea, select, input, button {
 	background: #181818;
 	color: #e8e0f0;
 	border: 0 solid #000;
@@ -34,7 +34,7 @@ textarea, select {
 	tab-size: 4 !important;
 }
 
-#a19c_picker, #a19c_textareas {
+#a19c_toprow, #a19c_textareas {
 	display: flex;
 	flex-flow: row;
 	justify-content: center;
@@ -45,7 +45,7 @@ textarea, select {
 	max-width: 800px;
 }
 
-#a19c_picker {
+#a19c_toprow {
 	flex: 0 0 auto;
 }
 #a19c_textareas {
@@ -53,10 +53,23 @@ textarea, select {
 	margin-top: 0;
 }
 
+#a19_picker, #a19_time {
+	font-size: 100%;
+	letter-spacing: -0.4px;
+	box-sizing: border-box;
+}
 #a19_picker {
 	flex: 1 1 auto;
-	font-size: 110%;
-	padding: 2px;
+	padding: 4px 2px;
+}
+#a19_time {
+	flex: 0 0 none;
+	padding: 2px 4px;
+	width: 76px;
+	height: 100%;
+	margin-left: 8px;
+	font-family: monospace;
+	text-align: right;
 }
 
 #a19_in, #a19_out, #a19_code {
@@ -65,13 +78,11 @@ textarea, select {
 	font-size: 11px;
 	letter-spacing: -0.2px;
 }
-
 #a19_in, #a19_out {
 	flex-grow: 1;
 	min-width: 0;
-	line-height: 10px;
+	line-height: 11px;
 }
-
 #a19_code {
 	flex-grow: 6;
 	line-height: 16px;

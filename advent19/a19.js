@@ -1,3 +1,7 @@
+// shorthands
+var floor = Math.floor;
+var ceil = Math.ceil;
+
 // ui stuff
 window.onload = function ()
 {
@@ -8,17 +12,17 @@ window.onload = function ()
 	var textarea_c = document.getElementById("a19_code");
 
 	var select_d = document.getElementById("a19_picker");
-	var button_g = document.getElementById("a19_go");
+	var button_t = document.getElementById("a19_time");
 
 	for (var i=0; i<DF.length; ++i)
 	{
 		var DFI = DF[i]; var I = i.toString(); var II = (i+1).toString();
-		var DFT = ' &nbsp;&bull;&nbsp; &quot;'+ DFI.title +'&quot;';
-		var og = '<optgroup label="Day '+ II + DFT +'">';
+		var DFT = ' &nbsp;&bull;&nbsp; '+ DFI.title;
+		var og = '<optgroup label="'+ II + DFT +'">';
 		for (var p=0; p<DFI.parts.length; ++p)
 		{
 			var DFIP = DFI.parts[p]; var P = p.toString(); var PP = (p+1).toString()
-			og += '<option value="'+ I +","+ P +'">Day '+ II +', Part '+ PP + DFT +'</option>';
+			og += '<option value="'+ I +","+ P +'">'+ II +'.'+ PP + DFT +'</option>';
 		}
 		select_d.innerHTML += og +'</optgroup>';
 	}
@@ -33,12 +37,17 @@ window.onload = function ()
 		var func = DF[D].parts[P];
 		textarea_i.value = input;
 		textarea_c.value = func.toString().replace(/\t/g,tabspace);
-		textarea_o.value = func(input);
+		button_t.onclick = function ()
+		{
+			var T0 = performance.now();
+			textarea_o.value = func(input);
+			var T1 = performance.now();
+			var perftime = ceil((T1-T0) * 10) / 10;
+			button_t.innerText = "~"+ String(perftime) +" ms";
+		}
+		button_t.onclick();
 	}
 }
-
-// shorthands
-var floor = Math.floor;
 
 // actual solutions
 var DF = [
@@ -122,61 +131,35 @@ function (Input)
 },
 function (Input)
 {
-	var expect = "19690720";
+	var IS = Input.split(","); var IL = IS.length;
+	for (var i=0; i<IL; ++i) IS[i] = parseInt(IS[i]);
+	var I = new Array();
+	var expect = 19690720;
 	for (var noun=0; noun<100; ++noun)
 		for (var verb=0; verb<100; ++verb)
 	{
-		var I = Input.split(",");
-		I[1] = String(noun);
-		I[2] = String(verb);
-		var IL = I.length;
-		var curpos = 0;
-		var get_io = function (p_opcode)
-		{
-			if (p_opcode+3 >= IL) return "Input too short to get i/o";
-			var vpos_a = parseInt(I[p_opcode+1]);
-			if (vpos_a >= IL) return "IO index (input 1) out of range";
-			var vpos_b = parseInt(I[p_opcode+2]);
-			if (vpos_b >= IL) return "IO index (input 2) out of range";
-			var vpos_o = parseInt(I[p_opcode+3]);
-			if (vpos_o >= IL) return "IO index (output) out of range";
-			return [parseInt(I[vpos_a]), parseInt(I[vpos_b]), vpos_o];
-		};
-		var oplist = {
-			"1": function (Pos) {
-				var IO = get_io(Pos);
-				if (typeof IO === "string") return IO;
-				I[IO[2]] = IO[0] + IO[1];
-				return 4; // move pointer by 4
-			},"2": function (Pos) {
-				var IO = get_io(Pos);
-				if (typeof IO === "string") return IO;
-				I[IO[2]] = IO[0] * IO[1];
-				return 4; // move pointer by 4
-			},"99": function (Pos) {
-				return false; // halt program
+		I[0] = IS[0]; I[1] = noun; I[2] = verb;
+		for (var i=3; i<IL; ++i) I[i] = IS[i];
+		var Pos = 0;
+		var Run = true;
+		while (Run && Pos < IL) {
+			switch (I[Pos]) {
+				case 1: // ADD and jump 4
+					I[I[Pos+3]] = I[I[Pos+1]] + I[I[Pos+2]];
+					Pos += 4; break;
+				case 2: // MULTIPLY and jump 4
+					I[I[Pos+3]] = I[I[Pos+1]] * I[I[Pos+2]];
+					Pos += 4; break;
+				case 99: // HALT program for result
+					if (I[0]==expect) return I[1]*100 + I[2];
+					Run = false; break;
+				default: return "Unknown opcode";
 			}
-		};
-		var output = "";
-		while (curpos < IL)
-		{
-			var opcode = I[curpos];
-			if (opcode in oplist)
-			{
-				var opres = (oplist[opcode])(curpos);
-				if (typeof opres === "string") return opres;
-				if (opres == false) {
-					if (I[0] == expect)
-						return String(I[1]) + String(I[2]);
-					else break;
-				}
-				if (typeof opres === "number")
-				{ curpos += opres; continue; }
-			}
-			return "Unexpected stop";
 		}
+		if (Pos >= IL) return "Unresolved stop";
 		continue;
 	}
+	return "Result not reached";
 }
 ]}
 ];
